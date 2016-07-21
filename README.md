@@ -6,7 +6,8 @@
 
 ## Build : 
           1. Open the command prompt in windows machine
-          2. Go to the folder where downloded codebase of the project is stored 
+          2. Through command prompt go to the folder where downloded codebase of the project is stored,
+             To make sure you are in the right folder check if the files named "README" and "gradle" are present there. 
           3. run the following command :   gradlew build
              Make sure the JAVA_HOME variable is set properly in the build machine. 
              Application requires Java version 1.8 .
