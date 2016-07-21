@@ -2,7 +2,7 @@
 ## Author : Sanjib Ghoshal
 ## Build : 
           1. Open the command prompt in windows machine
-          2. Go to the directory where downloded codebase of the project is stored 
+          2. Go to the folder where downloded codebase of the project is stored 
           3. run the following command :   gradlew build
              Make sure the JAVA_HOME variable is set properly in the build machine. 
              Application requires Java version 1.8 .
@@ -23,7 +23,9 @@
               <server ip>:9000/v1/addShops
              (In place of <server ip> put "localhost" if you are running the application in local machine)
              
-             sample Jason request structure is provided below
+             Each post request will replace the earlier stored list and create a new shop address list.
+             
+             Sample Jason request structure is provided below
              
                  [{
                     "shopName": "More Superstore",
@@ -83,4 +85,25 @@
                     ]
              
              
-          10.
+          10. As a "Customer" user can make a GET request to the microservice through this below url passing the latitude and longitude of current location throgh url.
+                    <server ip>:9000/v1/findNearestShop?lat=23&lng=77
+          
+          The json response to the request will be like below if there was no store found.  "addressLookup" field will show "Failed".
+          
+          {
+            "lat": 0,
+            "lng": 0,
+            "address": null,
+            "distance": null,
+            "addressLookup": "Failed"
+          }
+          
+          The json response to the request will be like below if there was a store found nearby. "addressLookup" field will show "Success". Here "lat" and "lng" fields are showing latitude and longitude of user geolocation. 
+          
+          {
+            "lat": 23,
+            "lng": 77,
+            "address": "More,209,Golf Green, Kolkata,700095",
+            "distance": "1448 KM",
+            "addressLookup": "Success"
+          }
