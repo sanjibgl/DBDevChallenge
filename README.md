@@ -1,5 +1,8 @@
 # DBDevChallenge
 ## Author : Sanjib Ghoshal
+## Note : The shop finder micro service is currently designed to cater to single "Retail Manager" for posting the shop list.
+          There is no authentication implemented.
+
 ## Build : 
           1. Open the command prompt in windows machine
           2. Go to the folder where downloded codebase of the project is stored 
