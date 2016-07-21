@@ -1,6 +1,7 @@
 # DBDevChallenge
 ## Author : Sanjib Ghoshal
-## Note : The shop finder micro service is currently designed to cater to single "Retail Manager" for posting the shop list.
+## Note : 
+          The shop finder micro service is currently designed to cater to single "Retail Manager" for posting the shop list.
           There is no authentication implemented.
 
 ## Build : 
