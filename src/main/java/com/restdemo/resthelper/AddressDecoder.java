@@ -103,6 +103,8 @@ public class AddressDecoder {
             lowestDistance = lowestDistance/1000;
             loc.setDistance(lowestDistance.toString()+" KM");
             loc.setAddressLookup(SUCCESS);
+            loc.setLat(nearestShop.getLatitude());
+            loc.setLng(nearestShop.getLongitude());
             }
         else{
                loc.setAddressLookup(FAIL);
