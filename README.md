@@ -47,9 +47,10 @@
                     }]
                     
            9. There will be a json response in the following format .
-              "latitude" and "longitude" fields will be populated for the store address if the adddress was found in google maps, and the  "addressLookup: field value will show as "Success".
-              If the address was not found, "addressLookup: field value will show as "Failed" and "latitude" and "longitude"
-              field values will be "0".
+              "latitude" and "longitude" fields will be populated for the shop address if the adddress was 
+              found in google maps, and the  "addressLookup: field value will show as "Success".
+              If the address was not found, "addressLookup: field value will show as "Failed" and "latitude" 
+              and "longitude" field values will be "0".
               
                   [
                       {
@@ -85,10 +86,12 @@
                     ]
              
              
-          10. As a "Customer" user can make a GET request to the microservice through this below url passing the latitude and longitude of current location throgh url.
+          10. As a "Customer" user can make a GET request to the microservice through this below url 
+          passing the latitude and longitude of  geolocation throgh url.
                     <server ip>:9000/v1/findNearestShop?lat=23&lng=77
           
-          The json response to the request will be like below if there was no store found.  "addressLookup" field will show "Failed".
+          The json response to the request will be like below if there was no shop found.  
+          The "addressLookup" field will show "Failed".
           
           {
             "lat": 0,
@@ -98,7 +101,8 @@
             "addressLookup": "Failed"
           }
           
-          The json response to the request will be like below if there was a store found nearby. "addressLookup" field will show "Success". Here "lat" and "lng" fields are showing latitude and longitude of user geolocation. 
+          The json response to the request will be like below if there was a shop found. "addressLookup" field will show "Success". Here "lat" and "lng" fields are showing latitude and longitude of the nearest shop.
+          The "address" filed is showing the address for the nearest shop.
           
           {
             "lat": 23,
