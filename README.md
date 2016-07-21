@@ -28,6 +28,8 @@
               <server ip>:9000/v1/addShops
              (In place of <server ip> put "localhost" if you are running the application in local machine)
              
+             IN REQUEST HEADER SET CONTENT-TYPE = APPLICATION/JSON
+             
              Each post request will replace the earlier stored list and create a new shop address list.
              
              Sample Jason request structure is provided below
@@ -93,9 +95,9 @@
              
           10. As a "Customer" user can make a GET request to the microservice through this below url 
           passing the latitude and longitude of  geolocation throgh url.
-                    <server ip>:9000/v1/findNearestShop?lat=23&lng=77
+                    <server ip>:9000/v1/findNearestShop?lat=23&lng=88
           
-          The json response to the request will be like below if there was no shop found.  
+          The json response to the request will be like below IF NO SHOP IS FOUND.  
           The "addressLookup" field will show "Failed".
           
           {
@@ -106,13 +108,13 @@
             "addressLookup": "Failed"
           }
           
-          The json response to the request will be like below if there was a shop found. "addressLookup" field will show "Success". Here "lat" and "lng" fields are showing latitude and longitude of the nearest shop.
+          The json response to the request will be like below IF A SHOP IS FOUND. "addressLookup" field will show "Success". Here "lat" and "lng" fields are showing latitude and longitude of the nearest shop.
           The "address" filed is showing the address for the nearest shop.
           
           {
-            "lat": 23,
-            "lng": 77,
-            "address": "More,209,Golf Green, Kolkata,700095",
-            "distance": "1448 KM",
-            "addressLookup": "Success"
+                    "lat": 22.4931376,
+                    "lng": 88.3621781,
+                    "address": "More,209,Golf Green, Kolkata,700095",
+                    "distance": "84 KM",
+                    "addressLookup": "Success"
           }
