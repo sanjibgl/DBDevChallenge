@@ -10,31 +10,32 @@ import java.util.List;
 
 /**
  *
- * @author Sanjib
- * This class persists the shop list posted by the store manager
- * This is a singleton class, this class is mimicking the persistence layer of the application
+ * @author Sanjib This class persists the shop list posted by the store manager
+ * This is a singleton class, this class is mimicking the persistence layer of
+ * the application
  */
 public class PersistShopList {
+
     List<ShopAddress> shopList;
-    private static PersistShopList instance; 
-    
-    private PersistShopList(){
+    private static PersistShopList instance;
+
+    private PersistShopList() {
     }
-    
-    public static PersistShopList getInstance(){
-        if(instance != null) {
+
+    public static PersistShopList getInstance() {
+        if (instance != null) {
             return instance;
         } else {
             instance = new PersistShopList();
-            return instance;        
+            return instance;
         }
     }
-            
-    public void persist(List<ShopAddress> shopList ){
+
+    public void persist(List<ShopAddress> shopList) {
         this.shopList = shopList;
     }
-    
-    public List<ShopAddress> get(){
+
+    public List<ShopAddress> get() {
         return this.shopList;
     }
 }

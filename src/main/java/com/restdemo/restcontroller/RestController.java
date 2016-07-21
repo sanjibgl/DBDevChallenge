@@ -19,32 +19,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RequestParam;
 
-        
 @org.springframework.web.bind.annotation.RestController
+@ControllerAdvice
 
-public class RestController {    
-   
-    @RequestMapping(value="/v1/addShops", method = {RequestMethod.POST }, produces = "application/json", consumes = "application/json")
-    public ResponseEntity <List> addShopAddresses(@RequestBody List<ShopAddress> shopList) {
-        PersistShopList persisShopList = PersistShopList.getInstance();       
+public class RestController {
+
+    @RequestMapping(value = "/v1/addShops", method = {RequestMethod.POST}, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<List> addShopAddresses(@RequestBody List<ShopAddress> shopList) {
+        PersistShopList persisShopList = PersistShopList.getInstance();
         AddressDecoder decoder = new AddressDecoder();
         decoder.decodeAddress(shopList);
-        persisShopList.persist(shopList); 
+        persisShopList.persist(shopList);
         return new ResponseEntity(persisShopList.get(), HttpStatus.OK);
 
     }
 
-    @RequestMapping(value= "/v1/findNearestShop",method = {RequestMethod.GET })
-    public Location findShop(@RequestParam String lat, String lng) {
-        List shopList = PersistShopList.getInstance().get();              
+    @RequestMapping(value = "/v1/findNearestShop", method = {RequestMethod.GET})
+    public Location findNearestShop(@RequestParam String lat, String lng) {
+        List shopList = PersistShopList.getInstance().get();
         AddressDecoder decoder = new AddressDecoder();
         Location loc = new Location();
         loc.setLat(Double.parseDouble(lat));
         loc.setLng(Double.parseDouble(lng));
-        decoder.findNearestAddress(shopList,loc);
+        decoder.findNearestAddress(shopList, loc);
         return loc;
     }
-    
+
 }

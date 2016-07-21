@@ -32,92 +32,90 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class AddressDecoder {
 
-      
-    public List<ShopAddress> decodeAddress(List<ShopAddress> addressList ){
+    public List<ShopAddress> decodeAddress(List<ShopAddress> addressList) {
         RestTemplate restTemplate = new RestTemplate();
-        
+
         for (ShopAddress shopAddress : addressList) {
-            String url = ApplicationConstants.GOOGLE_MAPS_DECODER_URI+shopAddress.getAddress()+ApplicationConstants.KEY+ApplicationConstants.GOOGLE_KEY;
-            GeocodeResponse geocode = restTemplate.getForObject(url, GeocodeResponse .class);
-            if(ApplicationConstants.GEOCODE_STATUS_OK.equals(geocode.getStatus())) {
-                
-                double lat = ((Location)((Geometry)((Geocode)(((List)geocode.getResults()).get(0))).getGeometry()).getLocation()).getLat();
-                double lon = ((Location)((Geometry)((Geocode)(((List)geocode.getResults()).get(0))).getGeometry()).getLocation()).getLng();
+            String url = ApplicationConstants.GOOGLE_MAPS_DECODER_URI + shopAddress.getAddress() + ApplicationConstants.KEY + ApplicationConstants.GOOGLE_KEY;
+            GeocodeResponse geocode = restTemplate.getForObject(url, GeocodeResponse.class);
+            if (ApplicationConstants.GEOCODE_STATUS_OK.equals(geocode.getStatus())) {
+
+                double lat = ((Location) ((Geometry) ((Geocode) (((List) geocode.getResults()).get(0))).getGeometry()).getLocation()).getLat();
+                double lon = ((Location) ((Geometry) ((Geocode) (((List) geocode.getResults()).get(0))).getGeometry()).getLocation()).getLng();
                 shopAddress.setLatitude(lat);
                 shopAddress.setLongitude(lon);
                 shopAddress.setAddressLookup(ApplicationConstants.SUCCESS);
-                }               
-                    
-            else{
+            } else {
                 shopAddress.setAddressLookup(ApplicationConstants.FAIL);
             }
         }
-         
+
         return addressList;
-               
+
     }
-   
 
+    public void findNearestAddress(List<ShopAddress> shopAddressList, Location loc) {
 
-    public void  findNearestAddress(List<ShopAddress> shopAddressList, Location loc){     
-        
-        if(checkForValidAddress(shopAddressList)){
+        if (checkForValidAddress(shopAddressList)) {
             RestTemplate restTemplate = new RestTemplate();
-            StringBuffer url = buildUrl(loc, shopAddressList);               
+            StringBuffer url = buildUrl(loc, shopAddressList);
             DistanceMatrix distmat = restTemplate.getForObject(url.toString(), DistanceMatrix.class);
-            String destination = null;
+
             int lowestIndex = 0;
             Long lowestDistance = new Long(0);
 
-            if(ApplicationConstants.GEOCODE_STATUS_OK.equals(distmat.getStatus())) {
+            if (ApplicationConstants.GEOCODE_STATUS_OK.equals(distmat.getStatus())) {
 
-                Rows row = (Rows)((List)distmat.getRows()).get(0);
+                Rows row = (Rows) ((List) distmat.getRows()).get(0);
                 List elements = row.getElements();
                 Iterator itr = elements.iterator();
 
-                int i = 0 ;
-                while (itr.hasNext()){
-                    Distance dist = ((Elements)itr.next()).getDistance();  
-                    if(dist!=null){
+                int i = 0;
+                while (itr.hasNext()) {
+                    Distance dist = ((Elements) itr.next()).getDistance();
+                    if (dist != null) {
                         Long currentDistance = new Long(dist.getValue());
-                        if(i == 0 ){
-                            lowestDistance = currentDistance;  
+                        if (i == 0) {
+                            lowestDistance = currentDistance;
 
                         }
-                        if(currentDistance < lowestDistance){
-                            lowestDistance = currentDistance; 
-                            lowestIndex=i;
-                        } 
+                        if (currentDistance < lowestDistance) {
+                            lowestDistance = currentDistance;
+                            lowestIndex = i;
+                        }
                     } else {
                         loc.setAddressLookup(FAIL);
-                    }           
-                    i=i+1;
-                }         
+                        loc.setLat(0);
+                        loc.setLng(0);
+                    }
+                    i = i + 1;
+                }
 
-            }            
-            else{
-               loc.setAddressLookup(FAIL);
+            } else {
+                loc.setAddressLookup(FAIL);
+                loc.setLat(0);
+                loc.setLng(0);
             }
-            ShopAddress nearestShop = (ShopAddress)shopAddressList.get(lowestIndex); 
-            loc.setAddress(nearestShop.getShopName()+COMMA+nearestShop.getShopAddressNumber()+COMMA+nearestShop.getShopAddress()+COMMA+nearestShop.getShopAddressPostCode());
-            lowestDistance = lowestDistance/1000;
-            loc.setDistance(lowestDistance.toString()+" KM");
+            ShopAddress nearestShop = (ShopAddress) shopAddressList.get(lowestIndex);
+            loc.setAddress(nearestShop.getShopName() + COMMA + nearestShop.getShopAddressNumber() + COMMA + nearestShop.getShopAddress() + COMMA + nearestShop.getShopAddressPostCode());
+            lowestDistance = lowestDistance / 1000;
+            loc.setDistance(lowestDistance.toString() + " KM");
             loc.setAddressLookup(SUCCESS);
             loc.setLat(nearestShop.getLatitude());
             loc.setLng(nearestShop.getLongitude());
-            }
-        else{
-               loc.setAddressLookup(FAIL);
-            }
+        } else {
+            loc.setAddressLookup(FAIL);
+            loc.setLat(0);
+            loc.setLng(0);
+        }
     }
-
 
     private boolean checkForValidAddress(List<ShopAddress> shopAddressList) {
         boolean flag = false;
-        if(shopAddressList!=null){
-            for(ShopAddress address:shopAddressList ){
-                if(ApplicationConstants.SUCCESS.equals(address.getAddressLookup())){
-                    flag=true;
+        if (shopAddressList != null) {
+            for (ShopAddress address : shopAddressList) {
+                if (ApplicationConstants.SUCCESS.equals(address.getAddressLookup())) {
+                    flag = true;
                     break;
                 }
             }
@@ -129,9 +127,11 @@ public class AddressDecoder {
         StringBuffer url = new StringBuffer();
         url.append(GOOGLE_DISTANCE_MATRIX_URI).append(loc.getLat()).append(COMMA).append(loc.getLng()).append(DESTINATION);
         shopAddressList.stream().forEach((ShopAddress shopAddress) -> {
-            url.append(shopAddress.getLatitude()).append(COMMA).append(shopAddress.getLongitude()).append("||");
+            if(SUCCESS.equals(shopAddress.getAddressLookup())){
+                url.append(shopAddress.getLatitude()).append(COMMA).append(shopAddress.getLongitude()).append("||");
+            }
         });
-        url.delete(url.lastIndexOf("|")-1, url.lastIndexOf("|"));
+        url.delete(url.lastIndexOf("|") - 1, url.lastIndexOf("|"));
         url.append(ApplicationConstants.KEY).append(ApplicationConstants.GOOGLE_KEY);
         return url;
     }
